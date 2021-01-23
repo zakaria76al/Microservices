@@ -1,9 +1,8 @@
 package com.projet.soa.fournisseur.models;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Getter
@@ -11,12 +10,18 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @ToString
 @Document(collection = "fournisseur")
 public class Fournisseur {
-    @Id
+    @Id @Generated
     private int id;
+    @NonNull
+    @Indexed(unique = true)
     private String Username;
+    @NonNull
     private String Nom;
+    @NonNull
     private String Adresse;
+    @NonNull
     private String Tel;
+    @NonNull
     private String Mdp;
 
     public Fournisseur() {

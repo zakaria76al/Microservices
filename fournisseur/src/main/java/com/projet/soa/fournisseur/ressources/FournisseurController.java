@@ -25,6 +25,17 @@ public class FournisseurController {
         return repository.findAll();
     }
 
+    @GetMapping("/findFournisseurByUser/{userName}")
+    public Fournisseur getFournisseurByUser(@PathVariable String userName){
+        List<Fournisseur> list = repository.findAll();
+        for (Fournisseur a: list) {
+            if(userName.equals(a.getUsername())){
+                return a;
+            }
+        }
+        return new Fournisseur();
+    }
+
     @GetMapping("/findFournisseur/{id}")
     public Optional<Fournisseur> getFournisseur(@PathVariable int id){
         return repository.findById(id);

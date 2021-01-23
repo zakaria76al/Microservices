@@ -13,26 +13,26 @@ import lombok.ToString;
 public class Fournisseur {
     @Id
     private int id;
-    private String Username;
-    private String Nom;
-    private String Adresse;
-    private String Tel;
-    private String Mdp;
+    private String username;
+    private String nom;
+    private String adresse;
+    private String tel;
+    private String mdp;
 
     public Fournisseur() {
     }
 
     public Fournisseur(int id, String username, String nom, String adresse, String tel, String mdp) {
         this.id = id;
-        Username = username;
-        Nom = nom;
-        Adresse = adresse;
-        Tel = tel;
-        Mdp = mdp;
+        this.username = username;
+        this.nom = nom;
+        this.adresse = adresse;
+        this.tel = tel;
+        this.mdp = mdp;
     }
 
     public String getNom() {
-        return Nom;
+        return nom;
     }
 
     public int getId() {
@@ -40,18 +40,18 @@ public class Fournisseur {
     }
 
     public String getAdresse() {
-        return Adresse;
+        return adresse;
     }
 
     public String getTel() {
-        return Tel;
+        return tel;
     }
 
     public String getUsername() {
-        return Username;
+        return username;
     }
 
     public String getMdp() {
-        return Mdp;
+        return mdp;
     }
 }
