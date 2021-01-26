@@ -1,18 +1,12 @@
 package com.projet.soa.authentification.ressources;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.projet.soa.authentification.models.Fournisseur;
 import com.projet.soa.authentification.models.Login;
 import com.projet.soa.authentification.repositories.FournisseurRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 @RestController
 public class AuthentificationController {
@@ -45,13 +39,15 @@ public class AuthentificationController {
 //        Integer port1 = discoveryClient.getInstances("fournisseur-service").get(0).getPort();
         final String uri = "http://FOURNISSEUR-SERVICE/findFournisseurByUser/" + login.getUsername();
         Fournisseur fournisseur = restTemplate.getForObject(uri, Fournisseur.class);// restTemplate.getForObject(uri, List.class);
-        System.out.println(fournisseur);
         if(fournisseur.getId() == 0)
         {
             return "Username not found";
         }
         if(fournisseur.getUsername().equals(login.getUsername())){
             if(fournisseur.getMdp().equals(login.getMdp())){
+                boolean haveMotif = restTemplate.getForObject("http://motif-service/motif/havemotif/"+fournisseur.getUsername(), boolean.class);
+                if(haveMotif == true)
+                    return "Compte inaccessible";
                 return "Connexion done";
             }
             else
