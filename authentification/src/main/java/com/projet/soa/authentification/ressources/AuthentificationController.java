@@ -6,6 +6,7 @@ import com.projet.soa.authentification.models.Fournisseur;
 import com.projet.soa.authentification.models.Login;
 import com.projet.soa.authentification.repositories.FournisseurRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
@@ -19,11 +20,19 @@ public class AuthentificationController {
     @Autowired
     private FournisseurRepository repository;
 
+    @Autowired
+    private RestTemplate restTemplate;
+
+//    @Autowired
+//    private DiscoveryClient discoveryClient;
+
     @PostMapping("/register")
     public String saveFournisseur(@RequestBody Fournisseur fournisseur){
         //repository.save(fournisseur);
-        final String uri = "http://localhost:8881/addFournisseur";
-        RestTemplate restTemplate = new RestTemplate();
+//        String host1 = discoveryClient.getInstances("fournisseur-service").get(0).getHost();
+//        Integer port1 = discoveryClient.getInstances("fournisseur-service").get(0).getPort();
+        final String uri = "http://FOURNISSEUR-SERVICE/addFournisseur";
+        //RestTemplate restTemplate = new RestTemplate();
         String result = restTemplate.postForObject(uri, fournisseur, String.class);
 
         System.out.println(result);
@@ -32,8 +41,9 @@ public class AuthentificationController {
 
     @PostMapping("/login")
     public String login(@RequestBody Login login) throws JsonProcessingException {
-        final String uri = "http://localhost:8881/findFournisseurByUser/"+login.getUsername();
-        RestTemplate restTemplate = new RestTemplate();
+//        String host1 = discoveryClient.getInstances("fournisseur-service").get(0).getHost();
+//        Integer port1 = discoveryClient.getInstances("fournisseur-service").get(0).getPort();
+        final String uri = "http://FOURNISSEUR-SERVICE/findFournisseurByUser/" + login.getUsername();
         Fournisseur fournisseur = restTemplate.getForObject(uri, Fournisseur.class);// restTemplate.getForObject(uri, List.class);
         System.out.println(fournisseur);
         if(fournisseur.getId() == 0)
