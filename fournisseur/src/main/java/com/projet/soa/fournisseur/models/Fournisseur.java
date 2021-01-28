@@ -23,17 +23,20 @@ public class Fournisseur {
     private String Tel;
     @NonNull
     private String Mdp;
+    @NonNull
+    private String Email;
 
     public Fournisseur() {
     }
 
-    public Fournisseur(int id, String username, String nom, String adresse, String tel, String mdp) {
+    public Fournisseur(int id, @NonNull String username, @NonNull String nom, @NonNull String adresse, @NonNull String tel, @NonNull String mdp, @NonNull String email) {
         this.id = id;
         Username = username;
         Nom = nom;
         Adresse = adresse;
         Tel = tel;
         Mdp = mdp;
+        Email = email;
     }
 
     public String getNom() {
@@ -58,5 +61,13 @@ public class Fournisseur {
 
     public String getMdp() {
         return Mdp;
+    }
+
+    public String getEmail() {
+        return Email;
+    }
+
+    public void setMdp(String mdp) {
+        Mdp = mdp;
     }
 }

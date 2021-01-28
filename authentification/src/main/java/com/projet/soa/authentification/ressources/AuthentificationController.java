@@ -5,6 +5,7 @@ import com.projet.soa.authentification.models.Fournisseur;
 import com.projet.soa.authentification.models.Login;
 import com.projet.soa.authentification.repositories.FournisseurRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
@@ -16,6 +17,9 @@ public class AuthentificationController {
 
     @Autowired
     private RestTemplate restTemplate;
+
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
 //    @Autowired
 //    private DiscoveryClient discoveryClient;
@@ -30,7 +34,8 @@ public class AuthentificationController {
         String result = restTemplate.postForObject(uri, fournisseur, String.class);
 
         System.out.println(result);
-        return "Added with userName " + fournisseur.getUsername() + " And ID : " + fournisseur.getId();
+        return result;
+        //return "Added with userName " + fournisseur.getUsername() + " And ID : " + fournisseur.getId();
     }
 
     @PostMapping("/login")
@@ -44,8 +49,12 @@ public class AuthentificationController {
             return "Username not found";
         }
         if(fournisseur.getUsername().equals(login.getUsername())){
-            if(fournisseur.getMdp().equals(login.getMdp())){
-                boolean haveMotif = restTemplate.getForObject("http://motif-service/motif/havemotif/"+fournisseur.getUsername(), boolean.class);
+
+            boolean correctMdp = bCryptPasswordEncoder.matches(login.getMdp(), fournisseur.getMdp());
+            //boolean correctMdp = restTemplate.getForObject("http://FOURNISSEUR-SERVICE/checkPassword/" + login.getMdp(), Boolean.class);
+            System.out.println(correctMdp);
+            if(correctMdp){
+                boolean haveMotif = restTemplate.getForObject("http://motif-service/motif/havemotif/" + fournisseur.getUsername(), boolean.class);
                 if(haveMotif == true)
                     return "Compte inaccessible";
                 return "Connexion done";
