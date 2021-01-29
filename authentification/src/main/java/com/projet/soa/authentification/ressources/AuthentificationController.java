@@ -21,19 +21,17 @@ public class AuthentificationController {
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
+    @Autowired
+    private FournisseurProxy fournisseurProxy;
+
 //    @Autowired
 //    private DiscoveryClient discoveryClient;
 
     @PostMapping("/register")
     public String saveFournisseur(@RequestBody Fournisseur fournisseur){
-        //repository.save(fournisseur);
-//        String host1 = discoveryClient.getInstances("fournisseur-service").get(0).getHost();
-//        Integer port1 = discoveryClient.getInstances("fournisseur-service").get(0).getPort();
-        final String uri = "http://FOURNISSEUR-SERVICE/addFournisseur";
-        //RestTemplate restTemplate = new RestTemplate();
-        String result = restTemplate.postForObject(uri, fournisseur, String.class);
+        //final String uri = "http://FOURNISSEUR-SERVICE/addFournisseur";
+        String result = fournisseurProxy.saveFournisseur(fournisseur);
 
-        System.out.println(result);
         return result;
         //return "Added with userName " + fournisseur.getUsername() + " And ID : " + fournisseur.getId();
     }
@@ -42,29 +40,7 @@ public class AuthentificationController {
     public String login(@RequestBody Login login) throws JsonProcessingException {
 //        String host1 = discoveryClient.getInstances("fournisseur-service").get(0).getHost();
 //        Integer port1 = discoveryClient.getInstances("fournisseur-service").get(0).getPort();
-        final String uri = "http://FOURNISSEUR-SERVICE/findFournisseurByUser/" + login.getUsername();
-        Fournisseur fournisseur = restTemplate.getForObject(uri, Fournisseur.class);// restTemplate.getForObject(uri, List.class);
-        if(fournisseur.getId() == 0)
-        {
-            return "Username not found";
-        }
-        if(fournisseur.getUsername().equals(login.getUsername())){
-
-            boolean correctMdp = bCryptPasswordEncoder.matches(login.getMdp(), fournisseur.getMdp());
-            //boolean correctMdp = restTemplate.getForObject("http://FOURNISSEUR-SERVICE/checkPassword/" + login.getMdp(), Boolean.class);
-            System.out.println(correctMdp);
-            if(correctMdp){
-                boolean haveMotif = restTemplate.getForObject("http://motif-service/motif/havemotif/" + fournisseur.getUsername(), boolean.class);
-                if(haveMotif == true)
-                    return "Compte inaccessible";
-                return "Connexion done";
-            }
-            else
-            {
-                return "Incorrect password";
-            }
-        }
-        return "Username not found";
+        return fournisseurProxy.login(login);
     }
 
 //    @GetMapping("/findAllFournisseurs")
