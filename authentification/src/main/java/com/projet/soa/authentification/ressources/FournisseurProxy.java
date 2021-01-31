@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.client.RestTemplate;
 
+import javax.servlet.http.HttpSession;
+
 @Service
 public class FournisseurProxy {
     @Autowired
@@ -18,6 +20,9 @@ public class FournisseurProxy {
 
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    @Autowired
+    private HttpSession httpSession;
 
     @HystrixCommand(fallbackMethod = "fallBackSaveFournisseur",
             commandProperties = {
@@ -58,6 +63,7 @@ public class FournisseurProxy {
                 boolean haveMotif = restTemplate.getForObject("http://motif-service/motif/havemotif/" + fournisseur.getUsername(), boolean.class);
                 if(haveMotif == true)
                     return "Compte inaccessible";
+                //httpSession.setAttribute("idUser", fournisseur.getId());
                 return "Connexion done";
             }
             else
